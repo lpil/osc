@@ -11,7 +11,7 @@ defmodule OSC.Mixfile do
       deps: deps,
       name: "OSC",
       source_url: "https://github.com/lpil/osc",
-      description: "Open Source Control for Elixir",
+      description: "Open Sound Control for Elixir",
       package: [
         contributors: ["Louis Pilfold"],
         licenses: ["MIT"],
@@ -30,6 +30,9 @@ defmodule OSC.Mixfile do
   end
 
   defp deps do
-    [{:shouldi, only: :test}]
+    [
+      {:shouldi, only: :test},
+      {:mix_test_watch, "~> 0.1.1"},
+    ]
   end
 end

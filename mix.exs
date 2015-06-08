@@ -25,12 +25,15 @@ defmodule OSC.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger],
-     mod: {OSC, []}]
+    [
+      applications: [:logger],
+      # mod: {OSC, []},
+   ]
   end
 
   defp deps do
     [
+      # {:excheck, only: :test},
       {:shouldi, only: :test},
       {:mix_test_watch, "~> 0.1.1"},
     ]

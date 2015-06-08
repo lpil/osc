@@ -33,8 +33,8 @@ defmodule OSC.Mixfile do
 
   defp deps do
     [
-      # {:excheck, only: :test},
-      {:shouldi, only: :test},
+      {:excheck, only: :test},
+      {:triq, github: "krestenkrab/triq", only: :test},
       {:mix_test_watch, "~> 0.1.1"},
     ]
   end

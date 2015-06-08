@@ -29,13 +29,11 @@ defmodule OSCTest do
     end
   end
 
-  with ".pad_to_mult_of_4" do
-    should "correctly pad random binaries" do
-      Enum.each 1..100, fn _ -> 
-        binary = :crypto.rand_bytes( :crypto.rand_uniform(1, 20) )
-                  |> OSC.pad_to_mult_of_4
-        assert rem( byte_size(binary), 4 ) == 0
-      end
+  with ".pad_to_mult_of_4 and random binaries" do
+    Enum.each 1..100, fn _ -> 
+      :crypto.rand_bytes( :crypto.rand_uniform(1, 20) )
+      |> OSC.pad_to_mult_of_4
+      |> assert_bytesize_multiple_of_4
     end
   end
 end

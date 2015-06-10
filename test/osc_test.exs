@@ -51,6 +51,25 @@ defmodule OSCTest do
   end
 
 
+  test ".float32 test numbers" do
+    assert OSC.float32(1)             == <<63, 128, 0, 0>>
+    assert OSC.float32(1.0)           == <<63, 128, 0, 0>>
+    assert OSC.float32(2)             == <<64, 0, 0, 0>>
+    assert OSC.float32(2.2)           == <<64, 12, 204, 205>>
+    assert OSC.float32(214748364700)  == <<82, 72, 0, 0>>
+    assert OSC.float32(-214748364700) == <<210, 72, 0, 0>>
+  end
+
+  @epsilon :math.pow( 2, -24 )
+  property ".float32" do
+    for_all x in real do
+      << y :: 32-big-float-unit(1) >> = OSC.float32(x)
+      delta = abs( x * @epsilon )
+      assert_in_delta x, y, delta
+    end
+  end
+
+
   property ".pad_to_mult_of_4 binary size" do
     for_all x in binary do
       size = x |> OSC.string |> byte_size

@@ -27,7 +27,7 @@ defmodule OSC do
 
 
   @doc """
-  Takes a num and returns an OSC integer
+  Takes a number and returns an OSC integer
 
   Values must fall between -2147483647 and 2147483647
   """
@@ -39,6 +39,14 @@ defmodule OSC do
   end
   defp do_int32(int) when int <= 2147483647 and int >= -2147483647 do
     << int :: 32-big-signed-integer-unit(1) >>
+  end
+
+
+  @doc """
+  Takes a number and returns an OSC float
+  """
+  def float32(number) do
+    << number :: 32-big-float-unit(1) >>
   end
 
 

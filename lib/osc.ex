@@ -19,7 +19,8 @@ defmodule OSC do
 
   @doc """
   Takes a string and returns an OSC string.
-  Input should only contain ASCII characters!
+
+  Input should only contain ASCII characters.
   """
   def string(string) do
     suffix_nulls( string )
@@ -76,5 +77,21 @@ defmodule OSC do
   end
   defp suffix_nulls(binary, _) do
     binary
+  end
+
+  @seconds_from_1900_to_1970 2_208_988_800
+  @doc """
+  Takes a tuple or symbol and returns an OSC timetag
+
+  Passing either of these symbols will create the 'immediately' timetag
+
+      :now
+      :immediately
+  """
+  def timetag(:now) do
+    <<0, 0, 0, 0, 0, 0, 0, 1>>
+  end
+  def timetag(:immediately) do
+    <<0, 0, 0, 0, 0, 0, 0, 1>>
   end
 end

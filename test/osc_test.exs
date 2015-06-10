@@ -94,6 +94,14 @@ defmodule OSCTest do
   end
 
 
+  test ".timetag :now" do
+    assert OSC.timetag( :now )         == <<0, 0, 0, 0, 0, 0, 0, 1>>
+  end
+  test ".timetag :immediately" do
+    assert OSC.timetag( :immediately ) == <<0, 0, 0, 0, 0, 0, 0, 1>>
+  end
+
+
   property ".suffix_nulls binary size" do
     for_all x in binary do
       size = x |> OSC.suffix_nulls |> byte_size

@@ -2,6 +2,8 @@ defmodule OSCTest do
   use ExUnit.Case, async: false
   use ExCheck
 
+  @float_epsilon :math.pow( 2, -24 )
+
   test ".string test strings" do
     assert OSC.string("Heya")    == <<72, 101, 121, 97>>
     assert OSC.string("Wassup!") == <<87, 97, 115, 115, 117, 112, 33, 0>>
@@ -60,11 +62,10 @@ defmodule OSCTest do
     assert OSC.float32(-214748364700) == <<210, 72, 0, 0>>
   end
 
-  @epsilon :math.pow( 2, -24 )
   property ".float32" do
     for_all x in real do
       << y :: 32-big-float-unit(1) >> = OSC.float32(x)
-      delta = abs( x * @epsilon )
+      delta = abs( x * @float_epsilon )
       assert_in_delta x, y, delta
     end
   end

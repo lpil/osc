@@ -45,7 +45,7 @@ defmodule OSC do
   @doc """
   Takes a number and returns an OSC float
   """
-  def float32(number) do
+  def float32(number) when is_number number do
     << number :: 32-big-float-unit(1) >>
   end
 

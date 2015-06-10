@@ -25,15 +25,22 @@ defmodule OSC do
     pad_to_mult_of_4( string )
   end
 
+
   @doc """
   Takes a num and returns an OSC integer
 
-  * 2147483647 is the largest possible value
-  * 2147483647 is the smallest possible value
+  Values must fall between -2147483647 and 2147483647
   """
-  def int32(int) when int <= 2147483647 and int >= -2147483647 do
+  def int32(int) when is_integer int do
+    do_int32(int)
+  end
+  def int32(float) when is_float float do
+    do_int32(round float)
+  end
+  defp do_int32(int) when int <= 2147483647 and int >= -2147483647 do
     << int :: 32-big-signed-integer-unit(1) >>
   end
+
 
   @doc """
   Pads a binary so that the byte_size is a multiple of 4

@@ -22,7 +22,7 @@ defmodule OSC do
   Input should only contain ASCII characters!
   """
   def string(string) do
-    pad_to_mult_of_4( string )
+    suffix_nulls( string )
   end
 
 
@@ -31,11 +31,11 @@ defmodule OSC do
 
   Values must fall between -2147483647 and 2147483647
   """
-  def int32(int) when is_integer int do
-    do_int32(int)
+  def int32(number) when is_integer number do
+    do_int32(number)
   end
-  def int32(float) when is_float float do
-    do_int32(round float)
+  def int32(number) when is_float number do
+    do_int32(round number)
   end
   defp do_int32(int) when int <= 2147483647 and int >= -2147483647 do
     << int :: 32-big-signed-integer-unit(1) >>
@@ -51,21 +51,30 @@ defmodule OSC do
 
 
   @doc """
+  Takes a binary and returns an OSC blob
+  """
+  def blob(data) when is_binary data do
+    data = suffix_nulls( data )
+    int32( byte_size data ) <> data
+  end
+
+
+  @doc """
   Pads a binary so that the byte_size is a multiple of 4
   """
-  def pad_to_mult_of_4(binary) do
-    pad_to_mult_of_4( binary, byte_size(binary) )
+  def suffix_nulls(binary) do
+    suffix_nulls( binary, byte_size(binary) )
   end
-  defp pad_to_mult_of_4(binary, size) when rem(size, 4) == 1 do
+  defp suffix_nulls(binary, size) when rem(size, 4) == 1 do
     binary <> <<0, 0, 0>>
   end
-  defp pad_to_mult_of_4(binary, size) when rem(size, 4) == 2 do
+  defp suffix_nulls(binary, size) when rem(size, 4) == 2 do
     binary <> <<0, 0>>
   end
-  defp pad_to_mult_of_4(binary, size) when rem(size, 4) == 3 do
+  defp suffix_nulls(binary, size) when rem(size, 4) == 3 do
     binary <> <<0>>
   end
-  defp pad_to_mult_of_4(binary, _) do
+  defp suffix_nulls(binary, _) do
     binary
   end
 end

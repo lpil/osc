@@ -71,9 +71,32 @@ defmodule OSCTest do
   end
 
 
-  property ".pad_to_mult_of_4 binary size" do
+  test ".blob test binaries" do
+    assert OSC.blob(<<1>>)          == <<0, 0, 0, 4, 1, 0, 0, 0>>
+    assert OSC.blob(<<1, 0, 0, 0>>) == <<0, 0, 0, 4, 1, 0, 0, 0>>
+    assert OSC.blob("Hi!")          == <<0, 0, 0, 4, 72, 105, 33, 0>>
+  end
+
+  property ".blob byte_size mult of 4" do
     for_all x in binary do
-      size = x |> OSC.string |> byte_size
+      size = byte_size OSC.blob( x )
+      assert rem( size, 4 ) == 0
+    end
+  end
+
+  property ".blob data" do
+    for_all x in binary do
+      implies byte_size(x) > 0 do
+        << _ :: binary-size(4), y :: binary >> = OSC.blob(x)
+        assert OSC.suffix_nulls(x) == y
+      end
+    end
+  end
+
+
+  property ".suffix_nulls binary size" do
+    for_all x in binary do
+      size = x |> OSC.suffix_nulls |> byte_size
       rem( size, 4 ) == 0
     end
   end

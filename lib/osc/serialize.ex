@@ -7,7 +7,7 @@ defmodule OSC.Serialize do
   Input should only contain ASCII characters.
   """
   def string(string) do
-    Util.suffix_nulls( string )
+    Util.add_null_suffix( string )
   end
 
 
@@ -39,7 +39,7 @@ defmodule OSC.Serialize do
   Takes a binary and returns an OSC blob
   """
   def blob(data) when is_binary data do
-    data = Util.suffix_nulls( data )
+    data = Util.add_null_suffix( data )
     int32( byte_size data ) <> data
   end
 

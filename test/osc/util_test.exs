@@ -4,10 +4,25 @@ defmodule OSC.UtilTest do
 
   alias OSC.Util
 
-  property ".suffix_nulls binary size" do
+  property ".add_null_suffix binary size" do
     for_all x in binary do
-      size = x |> Util.suffix_nulls |> byte_size
-      rem( size, 4 ) == 0
+      size = x |> Util.add_null_suffix |> byte_size
+      assert rem( size, 4 ) == 0
+    end
+  end
+
+
+  test ".strip_null_suffix with byte size of more than 4" do
+    assert <<1>> == Util.strip_null_suffix( <<1, 0, 0, 0, 0, 0, 0, 0, 0, 0>> )
+  end
+
+  test ".strip_null_suffix with byte size of less than 4" do
+    assert <<1>> == Util.strip_null_suffix( <<1, 0, 0>> )
+  end
+
+  property '.strip_null_suffix .add_null_suffix cancel' do
+    for_all x in binary do
+      assert x = x |> Util.add_null_suffix |> Util.strip_null_suffix
     end
   end
 end

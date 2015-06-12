@@ -91,7 +91,7 @@ defmodule OSC.SerializeTest do
     for_all x in binary do
       implies byte_size(x) > 0 do
         << _ :: binary-size(4), y :: binary >> = Serialize.blob(x)
-        assert Util.suffix_nulls(x) == y
+        assert Util.add_null_suffix(x) == y
       end
     end
   end

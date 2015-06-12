@@ -38,6 +38,14 @@ defmodule OSC.DeserializeTest do
   end
 
 
+  # test ".string test strings" do
+  #   assert Deserialize.string(<<72, 101, 121, 97>>) == "Heya"
+  #   assert Deserialize.string(<<87, 97, 115, 115, 117, 112, 33, 0>>) == "Wassup!"
+  #   assert Deserialize.string(<<72, 105, 0, 0>>) == "Hi"
+  #   assert Deserialize.string(<<72, 101, 108, 108, 111, 0, 0, 0>>) == "Hello"
+  # end
+
+
   def delta(x) do
     abs( x * @float_epsilon )
   end

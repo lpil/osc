@@ -38,12 +38,19 @@ defmodule OSC.DeserializeTest do
   end
 
 
-  # test ".string test strings" do
-  #   assert Deserialize.string(<<72, 101, 121, 97>>) == "Heya"
-  #   assert Deserialize.string(<<87, 97, 115, 115, 117, 112, 33, 0>>) == "Wassup!"
-  #   assert Deserialize.string(<<72, 105, 0, 0>>) == "Hi"
-  #   assert Deserialize.string(<<72, 101, 108, 108, 111, 0, 0, 0>>) == "Hello"
-  # end
+  test ".string test strings" do
+    assert Deserialize.string(<<72, 101, 121, 97>>) == "Heya"
+    assert Deserialize.string(<<87, 97, 115, 115, 117, 112, 33, 0>>) == "Wassup!"
+    assert Deserialize.string(<<72, 105, 0, 0>>) == "Hi"
+    assert Deserialize.string(<<72, 101, 108, 108, 111, 0, 0, 0>>) == "Hello"
+  end
+
+  property ".string serialize deserialize" do
+    for_all x in unicode_binary do
+      y = x |> Serialize.string |> Deserialize.string
+      assert x == y
+    end
+  end
 
 
   def delta(x) do

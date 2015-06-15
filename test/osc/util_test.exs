@@ -13,7 +13,8 @@ defmodule OSC.UtilTest do
 
 
   test ".strip_null_suffix with byte size of more than 4" do
-    assert <<1>> == Util.strip_null_suffix( <<1, 0, 0, 0, 0, 0, 0, 0, 0, 0>> )
+    stripped = Util.strip_null_suffix( <<1, 2, 3, 4, 5, 6, 7, 0>> )
+    assert <<1, 2, 3, 4, 5, 6, 7>> == stripped
   end
 
   test ".strip_null_suffix with byte size of less than 4" do
@@ -22,7 +23,19 @@ defmodule OSC.UtilTest do
 
   property '.strip_null_suffix .add_null_suffix cancel' do
     for_all x in binary do
-      assert x = x |> Util.add_null_suffix |> Util.strip_null_suffix
+      implies doesnt_end_in_null( x ) do
+        assert x == x |> Util.add_null_suffix |> Util.strip_null_suffix
+      end
     end
+  end
+
+
+  defp doesnt_end_in_null(<<>>) do
+    true
+  end
+  defp doesnt_end_in_null(bin) do
+    size = byte_size( bin ) - 1
+    << _ :: binary-size(size), x :: binary >> = bin
+    x != <<0>>
   end
 end

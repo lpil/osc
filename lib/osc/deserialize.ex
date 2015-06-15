@@ -1,5 +1,7 @@
 defmodule OSC.Deserialize do
 
+  alias OSC.Util
+
   @doc """
   Takes an OSC integer and returns an integer
   """
@@ -14,5 +16,12 @@ defmodule OSC.Deserialize do
   def float32(bin) do
     << number :: 32-big-float-unit(1) >> = bin
     number
+  end
+
+  @doc """
+  Takes an OSC string and returns a string
+  """
+  def string(bin) do
+    Util.strip_null_suffix( bin )
   end
 end

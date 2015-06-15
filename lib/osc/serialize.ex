@@ -49,8 +49,6 @@ defmodule OSC.Serialize do
   #     {megaseconds, seconds, milliseconds}
   #     {megaseconds, seconds, milliseconds, microseconds}
 
-
-  @seconds_from_1900_to_1970 2_208_988_800
   @doc """
   Takes a tuple or symbol and returns an OSC timetag
 
@@ -66,22 +64,30 @@ defmodule OSC.Serialize do
     <<0, 0, 0, 0, 0, 0, 0, 1>>
   end
 
-  # def timetag({megaseconds, seconds, milliseconds}) do
-  #   timetag({megaseconds, seconds, milliseconds, 0})
-  # end
-  # def timetag(time = {_mega, _seconds, milli, micro}) do
-  #   seconds = time |> time_to_seconds |> unix_time_to_1900_time
-  #   float32(seconds) + 1
-  # end
+  @second_divider :math.pow( 2, 32 )
+  @seconds_from_1900_to_1970 2_208_988_800
 
-  # defp time_to_seconds({megaseconds, seconds, _, _}) do
-  #   time_to_seconds({megaseconds, seconds, 0})
-  # end
-  # defp time_to_seconds({megaseconds, seconds, _}) do
-  #   megaseconds * 1000 + seconds
-  # end
+  def timetag({mega, seconds, milli}) do
+    mega    = secs(:mega, mega)   * @second_divider
+    seconds = seconds             * @second_divider
+    milli   = secs(:milli, milli) * @second_divider
+    seconds = mega + seconds + milli
+    seconds = seconds + @seconds_from_1900_to_1970
+    << seconds :: 64-big-signed-integer-unit(1) >>
+  end
+  def timetag({mega, seconds, milli, micro}) do
+    mega    = secs(:mega, mega)   * @second_divider
+    seconds = seconds             * @second_divider
+    milli   = secs(:milli, milli) * @second_divider
+    micro   = secs(:micro, micro) * @second_divider
+    seconds = mega + seconds + milli + micro
+    seconds = seconds + @seconds_from_1900_to_1970
+    << seconds :: 64-big-unsigned-integer-unit(1) >>
+  end
 
-  # defp unix_time_to_1900_time(seconds) do
-  #   seconds + @seconds_from_1900_to_1970
-  # end
+  defp secs(:mega,    x), do: x * 1000
+  defp secs(:milli,   x), do: x / 1000
+  defp secs(:micro,   x), do: x / 1000_000
+  # defp secs(:nano,    x), do: x / 1000_000_000
+  # defp secs(:pico,    x), do: x / 1000_000_000_000
 end

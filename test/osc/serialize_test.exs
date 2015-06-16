@@ -96,12 +96,17 @@ defmodule OSC.SerializeTest do
     end
   end
 
+  @timetag_unix File.read!( "test/data/timetag_unix.dat" )
 
   test ".timetag :now" do
     assert Serialize.timetag( :now ) == <<0, 0, 0, 0, 0, 0, 0, 1>>
   end
   test ".timetag :immediately" do
     assert Serialize.timetag( :immediately ) == <<0, 0, 0, 0, 0, 0, 0, 1>>
+  end
+
+  test ".timetag unix ({0, 0, 0})" do
+    assert Serialize.timetag( {0, 0, 0} ) == @timetag_unix
   end
 
 end

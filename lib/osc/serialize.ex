@@ -68,11 +68,12 @@ defmodule OSC.Serialize do
   @seconds_from_1900_to_1970 2_208_988_800
 
   def timetag({mega, seconds, milli}) do
-    mega    = secs(:mega, mega)   * @second_divider
-    seconds = seconds             * @second_divider
-    milli   = secs(:milli, milli) * @second_divider
+    mega    = mega * 1000_000
+    milli   = milli / 1000
     seconds = mega + seconds + milli
     seconds = seconds + @seconds_from_1900_to_1970
+    seconds = seconds * @second_divider
+    IO.inspect seconds
     << seconds :: 64-big-signed-integer-unit(1) >>
   end
   def timetag({mega, seconds, milli, micro}) do

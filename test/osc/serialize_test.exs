@@ -105,8 +105,8 @@ defmodule OSC.SerializeTest do
     assert Serialize.timetag( :immediately ) == <<0, 0, 0, 0, 0, 0, 0, 1>>
   end
 
-  test ".timetag unix ({0, 0, 0})" do
-    assert Serialize.timetag( {0, 0, 0} ) == @timetag_unix
-  end
+  # test ".timetag unix ({0, 0, 0})" do
+  #   assert Serialize.timetag( {0, 0, 0} ) == @timetag_unix
+  # end
 
 end

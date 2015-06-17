@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'date'
+
 def self.timetag(time)
   time, _, dir = timetag_encoding(time)
   time.pack dir
@@ -11,4 +13,5 @@ def self.timetag_encoding(time)
   [[t1, t2], 't', 'N2']
 end
 
-File.write 'test/data/timetag_unix.dat', timetag(Time.at 1970)
+File.write 'test/data/timetag_1900.dat', timetag(Time.at 0 - 2_208_988_800)
+File.write 'test/data/timetag_unix.dat', timetag(Time.at 0)

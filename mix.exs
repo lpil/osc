@@ -35,7 +35,8 @@ defmodule OSC.Mixfile do
     [
       {:excheck, only: :test},
       {:triq, github: "krestenkrab/triq", only: :test},
-      {:mix_test_watch, "~> 0.1.1"},
+      {:mix_test_watch, "~> 0.1.1", only: :dev},
+      {:dogma, github: "lpil/dogma", only: :dev},
     ]
   end
 end

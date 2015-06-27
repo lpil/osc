@@ -2,23 +2,23 @@ defmodule OSC.DeserializeTest do
   use ExUnit.Case, async: false
   use ExCheck
 
-  alias OSC.Deserialize
+  alias OSC.Deserialize, as: D
   alias OSC.Serialize
 
   @float_epsilon :math.pow( 2, -24 )
-  
+
   test ".int32 test numbers" do
-    assert 1           == Deserialize.int32(<<0, 0, 0, 1>>)
-    assert 2           == Deserialize.int32(<<0, 0, 0, 2>>)
-    assert -2          == Deserialize.int32(<<255, 255, 255, 254>>)
-    assert 2147483647  == Deserialize.int32(<<127, 255, 255, 255>>)
-    assert -2147483647 == Deserialize.int32(<<128, 0, 0, 1>>)
+    assert 1           == D.int32(<<0, 0, 0, 1>>)
+    assert 2           == D.int32(<<0, 0, 0, 2>>)
+    assert -2          == D.int32(<<255, 255, 255, 254>>)
+    assert 2147483647  == D.int32(<<127, 255, 255, 255>>)
+    assert -2147483647 == D.int32(<<128, 0, 0, 1>>)
   end
 
   property ".int32 serialize deserialize" do
     for_all x in int do
       implies x <= 2147483647 and x >= -2147483647 do
-        assert x == x |> Serialize.int32 |> Deserialize.int32
+        assert x == x |> Serialize.int32 |> D.int32
       end
     end
   end
@@ -26,28 +26,28 @@ defmodule OSC.DeserializeTest do
 
   test ".float32 test numbers" do
     pi = 3.14 # three-ish
-    y = pi |> Serialize.float32 |> Deserialize.float32
+    y = pi |> Serialize.float32 |> D.float32
     assert_in_delta pi, y, delta(pi)
   end
 
   property ".float32 serialize deserialize" do
     for_all x in real do
-      y = x |> Serialize.float32 |> Deserialize.float32
+      y = x |> Serialize.float32 |> D.float32
       assert_in_delta x, y, delta(x)
     end
   end
 
 
   test ".string test strings" do
-    assert Deserialize.string(<<72, 101, 121, 97>>) == "Heya"
-    assert Deserialize.string(<<87, 97, 115, 115, 117, 112, 33, 0>>) == "Wassup!"
-    assert Deserialize.string(<<72, 105, 0, 0>>) == "Hi"
-    assert Deserialize.string(<<72, 101, 108, 108, 111, 0, 0, 0>>) == "Hello"
+    assert D.string(<<72, 101, 121, 97>>) == "Heya"
+    assert D.string(<<87, 97, 115, 115, 117, 112, 33, 0>>) == "Wassup!"
+    assert D.string(<<72, 105, 0, 0>>) == "Hi"
+    assert D.string(<<72, 101, 108, 108, 111, 0, 0, 0>>) == "Hello"
   end
 
   property ".string serialize deserialize" do
     for_all x in unicode_binary do
-      y = x |> Serialize.string |> Deserialize.string
+      y = x |> Serialize.string |> D.string
       assert x == y
     end
   end

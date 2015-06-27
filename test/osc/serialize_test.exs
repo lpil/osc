@@ -110,11 +110,8 @@ defmodule OSC.SerializeTest do
     assert S.timetag( {0, 0, 0} ) == @timetag_unix
   end
 
-  test ".timetag 1970 ({0, -2_208_988_800, 0})" do
-    assert S.timetag( {0, -2_208_988_800, 0} ) == @timetag_1900
-  end
-  test ".timetag 1970 ({-10, -2198988800, 0})" do
-    assert S.timetag( {-10, -2198988800, 0} ) == @timetag_1900
+  test ".timetag 1900" do
+    assert S.timetag( {-2_208, -988_800, 0} ) == @timetag_1900
   end
 
 end

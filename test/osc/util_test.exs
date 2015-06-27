@@ -21,7 +21,7 @@ defmodule OSC.UtilTest do
     assert <<1>> == Util.strip_null_suffix( <<1, 0, 0>> )
   end
 
-  property '.strip_null_suffix .add_null_suffix cancel' do
+  property ".strip_null_suffix .add_null_suffix cancel" do
     for_all x in binary do
       implies doesnt_end_in_null( x ) do
         assert x == x |> Util.add_null_suffix |> Util.strip_null_suffix

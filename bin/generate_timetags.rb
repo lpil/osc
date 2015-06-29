@@ -13,5 +13,8 @@ def self.timetag_encoding(time)
   [[t1, t2], 't', 'N2']
 end
 
-File.write 'test/data/timetag_1900.dat', timetag(Time.at 0 - 2_208_988_800)
+File.write(
+  'test/data/timetag_1900_half_sec.dat',
+  timetag(Time.at(-2_208_988_800 + 0.5))
+)
 File.write 'test/data/timetag_unix.dat', timetag(Time.at 0)

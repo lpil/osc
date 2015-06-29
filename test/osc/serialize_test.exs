@@ -96,8 +96,8 @@ defmodule OSC.SerializeTest do
     end
   end
 
-  @timetag_1900 File.read!( "test/data/timetag_1900.dat" )
   @timetag_unix File.read!( "test/data/timetag_unix.dat" )
+  @timetag_1900_half_sec File.read!( "test/data/timetag_1900_half_sec.dat" )
 
   test ".timetag :now" do
     assert S.timetag( :now ) == <<0, 0, 0, 0, 0, 0, 0, 1>>
@@ -111,7 +111,23 @@ defmodule OSC.SerializeTest do
   end
 
   test ".timetag 1900" do
-    assert S.timetag( {-2_208, -988_800, 0} ) == @timetag_1900
+    assert S.timetag( {-2_208, -988_800, 0} ) == <<0, 0, 0, 0, 0, 0, 0, 0,>>
+  end
+
+  test ".timetag 1900 and a second in microseconds" do
+    expected = <<0, 0, 0, 1, 0, 0, 0, 0>>
+    assert expected == S.timetag( {-2_208, -988_800, 1_000_000} )
+  end
+
+  test ".timetag 1900 and a microsecond" do
+    expected = <<0, 0, 0, 0, 0, 0, 16, 199>>
+    assert expected == S.timetag( {-2_208, -988_800, 1} )
+  end
+
+  test ".timetag 1900 and half sec" do
+    expected = <<0, 0, 0, 0, 128, 0, 0, 0>>
+    assert @timetag_1900_half_sec == expected
+    assert expected == S.timetag( {-2_208, -988_800, 500_000} )
   end
 
 end

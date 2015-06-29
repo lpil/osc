@@ -44,17 +44,17 @@ defmodule OSC.Serialize do
   end
 
 
-  @second_divider :math.pow( 2, 32 )
+  @max_32bit :math.pow( 2, 32 )
   @seconds_from_1900_to_1970 2_208_988_800
 
 
   @doc """
   Takes a tuple or symbol and returns an OSC timetag
 
-  The tuple can be in these formats:
+  The tuple is expected to be in the format below, which is the same as the
+  return value of `:os.timestamp`
 
-      {megaseconds, seconds, milliseconds}
-      {megaseconds, seconds, milliseconds, microseconds}
+      {megaseconds, seconds, microseconds}
 
   Passing either of these symbols will create the 'immediately' timetag
 
@@ -67,16 +67,16 @@ defmodule OSC.Serialize do
   def timetag(:immediately) do
     <<0, 0, 0, 0, 0, 0, 0, 1>>
   end
-  def timetag({mega, seconds, milli}) do
-    mega    = mega * 1_000_000
-    seconds = seconds + @seconds_from_1900_to_1970
-    milli   = milli / 1000
-    seconds = mega + seconds + milli
-    seconds |> timetag_fixed_precision_float
+  def timetag({mega, seconds, micro}) do
+    mega     = mega * 1_000_000
+    seconds  = seconds + @seconds_from_1900_to_1970
+    seconds  = (mega + seconds) * @max_32bit
+    fraction = @max_32bit * micro / 1_000_000
+    time = seconds + fraction
+    time |> timetag_fixed_precision_float
   end
 
   defp timetag_fixed_precision_float(seconds) do
-    seconds = round( seconds * @second_divider )
-    << seconds :: 64-big-unsigned-integer-unit(1) >>
+    << round( seconds ) :: 64-big-unsigned-integer-unit(1) >>
   end
 end

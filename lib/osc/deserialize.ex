@@ -53,7 +53,7 @@ defmodule OSC.Deserialize do
   defp to_time_tuple(raw_seconds, fraction) do
     seconds = rem( raw_seconds, 1_000_000 )
     mega    = div( raw_seconds, 1_000_000 )
-    micro   = fraction / @max_32bit * 1_000_000
+    micro   = round( fraction / @max_32bit * 1_000_000 )
     {mega, seconds, micro}
   end
 

@@ -54,16 +54,21 @@ defmodule OSC.DeserializeTest do
 
 
   @timetag_unix File.read!( "test/data/timetag_unix.dat" )
+  @timetag_1900_half_sec File.read!( "test/data/timetag_1900_half_sec.dat" )
 
   test ".timetag :immediately" do
     assert D.timetag(<<0, 0, 0, 0, 0, 0, 0, 1>>) == :immediately
   end
 
   test ".timetag 1900" do
-    assert D.timetag( <<0, 0, 0, 0, 0, 0, 0, 0>> ) == {-2_208, -988_800, 0, 0}
+    assert D.timetag( <<0, 0, 0, 0, 0, 0, 0, 0>> ) == {-2_208, -988_800, 0}
   end
   test ".timetag 1970" do
-    assert D.timetag( @timetag_unix ) == {0, 0, 0, 0}
+    assert D.timetag( @timetag_unix ) == {0, 0, 0}
+  end
+
+  test ".timetag 1900 and half sec" do
+    assert D.timetag( @timetag_1900_half_sec ) == {-2_208, -988_800, 500_000}
   end
 
 

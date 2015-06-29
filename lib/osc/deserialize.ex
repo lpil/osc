@@ -26,16 +26,17 @@ defmodule OSC.Deserialize do
   end
 
 
-  @second_divider :math.pow( 2, 32 )
+  @max_32bit :math.pow( 2, 32 )
   @seconds_from_1900_to_1970 2_208_988_800
 
   @doc """
   Takes an OSC timetag, and retuns a time tuple, or a symbol
 
 
-  The tuple will be in this format:
+  The tuple will be in the following format, which is the same as the return
+  value of `:os.timestamp`
 
-      {megaseconds, seconds, milliseconds, microseconds}
+      {megaseconds, seconds, microseconds}
 
   When the timetag is the `immediately` timetag, `:immediately` is returned.
   """
@@ -43,29 +44,24 @@ defmodule OSC.Deserialize do
     :immediately
   end
   def timetag(bin) do
-    seconds = bin |> from_timetag_float
+    {seconds, fraction} = bin |> from_timetag_float
     seconds = seconds - @seconds_from_1900_to_1970
-    seconds |> to_time_tuple
+    to_time_tuple( seconds, fraction )
   end
 
 
-  defp to_time_tuple(raw_seconds) do
-    seconds = rem( raw_seconds, 1_000_000 ) |> floor
-    mega    = div( raw_seconds, 1_000_000 ) |> floor
-    milli   = 0 # TODO
-    micro   = 0 # TODO
-    {mega, seconds, milli, micro}
-  end
-
-  defp floor(x) when is_integer x do
-    x
-  end
-  defp floor(x) when is_float x do
-    x |> Float.floor |> trunc
+  defp to_time_tuple(raw_seconds, fraction) do
+    seconds = rem( raw_seconds, 1_000_000 )
+    mega    = div( raw_seconds, 1_000_000 )
+    micro   = fraction / @max_32bit * 1_000_000
+    {mega, seconds, micro}
   end
 
   defp from_timetag_float(bin) do
-    << seconds :: 64-big-unsigned-integer-unit(1) >> = bin
-    round( seconds / @second_divider )
+    <<
+      seconds  :: 32-big-unsigned-integer-unit(1),
+      fraction :: 32-big-unsigned-integer-unit(1),
+    >> = bin
+    {seconds, fraction}
   end
 end

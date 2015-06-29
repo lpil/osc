@@ -76,6 +76,7 @@ defmodule OSC.Serialize do
     time |> timetag_fixed_precision_float
   end
 
+
   defp timetag_fixed_precision_float(seconds) do
     << round( seconds ) :: 64-big-unsigned-integer-unit(1) >>
   end

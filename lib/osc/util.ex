@@ -1,4 +1,7 @@
 defmodule OSC.Util do
+  @moduledoc """
+  Handy utility functions.
+  """
   @doc """
   Pads a binary so that the byte_size is a multiple of 4
   """

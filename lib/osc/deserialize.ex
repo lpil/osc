@@ -1,4 +1,7 @@
 defmodule OSC.Deserialize do
+  @moduledoc """
+  Turning OSC atomic types into Elixir terms.
+  """
 
   alias OSC.Util
 

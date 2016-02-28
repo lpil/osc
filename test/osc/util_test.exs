@@ -7,7 +7,7 @@ defmodule OSC.UtilTest do
   property ".add_null_suffix binary size" do
     for_all x in binary do
       size = x |> Util.add_null_suffix |> byte_size
-      assert rem( size, 4 ) == 0
+      rem( size, 4 ) == 0
     end
   end
 
@@ -24,7 +24,7 @@ defmodule OSC.UtilTest do
   property ".strip_null_suffix .add_null_suffix cancel" do
     for_all x in binary do
       implies doesnt_end_in_null( x ) do
-        assert x == x |> Util.add_null_suffix |> Util.strip_null_suffix
+        x == x |> Util.add_null_suffix |> Util.strip_null_suffix
       end
     end
   end

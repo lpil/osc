@@ -50,7 +50,7 @@ defmodule OSC.SerializeTest do
     for_all x in int do
       implies x <= 2147483647 and x >= -2147483647 do
         << y :: 32-big-signed-integer-unit(1) >> = S.int32(x)
-        assert x == y
+        x == y
       end
     end
   end
@@ -83,7 +83,7 @@ defmodule OSC.SerializeTest do
   property ".blob byte_size mult of 4" do
     for_all x in binary do
       size = byte_size S.blob( x )
-      assert rem( size, 4 ) == 0
+      rem( size, 4 ) == 0
     end
   end
 
@@ -91,7 +91,7 @@ defmodule OSC.SerializeTest do
     for_all x in binary do
       implies byte_size(x) > 0 do
         << _ :: binary-size(4), y :: binary >> = S.blob(x)
-        assert Util.add_null_suffix(x) == y
+        Util.add_null_suffix(x) == y
       end
     end
   end
